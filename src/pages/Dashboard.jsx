@@ -16,7 +16,6 @@ import { AppSidebar } from "@/components/app-sidebar"
 import {
   SidebarProvider,
   SidebarInset,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -47,9 +46,7 @@ export default function Dashboard() {
       <AppSidebar />
 
       <SidebarInset className="min-h-screen bg-gray-50">
-        <header className="flex h-16 items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mx-2 h-6" />
+        <header className="flex h-16 items-center gap-2 px-4 relative">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -65,6 +62,7 @@ export default function Dashboard() {
 
         <main className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+
             {/* WhatsApp Details Card */}
             <Card>
               <CardHeader className="pb-2">

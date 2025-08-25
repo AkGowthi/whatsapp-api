@@ -34,8 +34,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import "../styles/phone-input.css";
-import Authentication from "./add_template/Authentication";
+import "../../styles/phone-input.css";
+import Authentication from "./Authentication";
 
 const languages = [
   { label: "Afrikaans (af)", value: "af" },
@@ -322,7 +322,7 @@ export default function AddTemplate() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-screen bg-white">
+      <SidebarInset className="min-h-screen bg-gray-50">
         <div className="p-8">
           <h1 className="text-2xl font-semibold mb-8">Create New Template</h1>
           <div className="flex gap-6 items-start">
@@ -1084,7 +1084,7 @@ export default function AddTemplate() {
                     </div>
                   </div>
                   {/* Input bar fixed at bottom */}
-                  <div className="bg-[#f7f7f7] px-4 py-3 flex items-center gap-2 border-t mt-auto">
+                  <div className="bg-[#f0f0f0] px-4 py-3 flex items-center gap-2 border-t mt-auto">
                     <button
                       type="button"
                       className="p-0 bg-transparent text-gray-500 border-0 outline-none flex items-center justify-center"

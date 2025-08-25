@@ -40,7 +40,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 
 export default function Templates() {
-
   const [selectedRows, setSelectedRows] = useState([])
   const [statusFilter, setStatusFilter] = useState([])
   // Column visibility state
@@ -51,6 +50,7 @@ export default function Templates() {
     language: true,
     status: true,
   })
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const statusOptions = [
@@ -163,7 +163,7 @@ export default function Templates() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 {/* Search */}
-                <div className="relative">
+                <div className="relative bg-white rounded-lg">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     placeholder="Search..."
@@ -172,9 +172,9 @@ export default function Templates() {
                 </div>
 
                 {/* Status Filter */}
-                <DropdownMenu>
+                <DropdownMenu open={statusDropdownOpen} onOpenChange={setStatusDropdownOpen}>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="gap-2 !px-3 !border-dashed">
+                    <Button variant="outline" className="gap-2 !px-3 !border-dashed focus:!ring-0">
                       <Plus className="w-4 h-4" />
                       Status
                     </Button>
@@ -214,6 +214,16 @@ export default function Templates() {
                         <span>{status}</span>
                       </DropdownMenuItem>
                     ))}
+                    <DropdownMenuSeparator />
+                    <div className="flex justify-end p-2">
+                      <Button
+                        size="sm"
+                        className="bg-black text-white hover:bg-gray-800"
+                        onClick={() => setStatusDropdownOpen(false)}
+                      >
+                        Submit
+                      </Button>
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
