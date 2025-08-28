@@ -43,12 +43,12 @@ const templates = [
 
 export default function CreateCampaign() {
   const [campaignType, setCampaignType] = useState(campaignTypes[0]);
-  const [showMarketingMsg, setShowMarketingMsg] = useState(false);
   const [sendTo, setSendTo] = useState(sendToOptions[0]);
   // Show the first template by default so the preview is visible immediately
   const [template, setTemplate] = useState(templates[0]);
   const [campaignName, setCampaignName] = useState("");
   const [groups, setGroups] = useState([]);
+  const [groupSearch, setGroupSearch] = useState("");
   const [scheduleTime, setScheduleTime] = useState("");
 
   return (
@@ -69,6 +69,7 @@ export default function CreateCampaign() {
                     placeholder="Enter campaign name"
                     value={campaignName}
                     onChange={e => setCampaignName(e.target.value)}
+                    className="bg-white"
                   />
                 </div>
                 {/* Campaign Type & Template */}
@@ -83,22 +84,16 @@ export default function CreateCampaign() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="min-w-[var(--radix-dropdown-menu-trigger-width)] w-auto">
-                        <DropdownMenuItem onClick={() => {
-                          setCampaignType("SCHEDULED_MARKETING");
-                          setShowMarketingMsg(true);
-                        }}>
+                        <DropdownMenuItem onClick={() => setCampaignType("SCHEDULED_MARKETING")}> 
                           Scheduled Marketing
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
-                          setCampaignType("MARKETING");
-                          setShowMarketingMsg(false);
-                        }}>
+                        <DropdownMenuItem onClick={() => setCampaignType("MARKETING")}> 
                           Marketing
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                    {/* Show message if Scheduled Marketing is selected */}
-                    {showMarketingMsg && (
+                    {/* Show message only for Marketing type */}
+                    {campaignType === "MARKETING" && (
                       <div className="mt-2 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded-lg px-3 py-2 flex items-start gap-2">
                         <Info className="w-4 h-4 mt-0.5" />
                         <span>Messages will be sent immediately after campaign creation to all contacts in the selected groups.</span>
@@ -143,29 +138,75 @@ export default function CreateCampaign() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                {/* Select Groups */}
+                {/* Select Groups - Searchable Dropdown */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Select Groups</label>
-                  <Input placeholder="Search groups..." />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between bg-white text-left">
+                        <span className="truncate flex-1">
+                          {groups.length > 0 ? groups.join(", ") : "Search and select groups..."}
+                        </span>
+                        <ChevronDown className="w-4 h-4 ml-2" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-full min-w-[220px] p-2">
+                      <Input
+                        placeholder="Search groups..."
+                        className="mb-2 bg-white"
+                        value={groupSearch}
+                        onChange={e => setGroupSearch(e.target.value)}
+                        onClick={e => e.stopPropagation()}
+                        // Prevent dropdown from closing on input
+                      />
+                      {/* Example group options, replace with your group data */}
+                      {["Group A", "Group B", "Group C", "Group D"]
+                        .filter(group => group.toLowerCase().includes(groupSearch.toLowerCase()))
+                        .map((group) => (
+                          <DropdownMenuItem
+                            key={group}
+                            onSelect={e => {
+                              e.preventDefault();
+                              setGroups((prev) =>
+                                prev.includes(group)
+                                  ? prev.filter((g) => g !== group)
+                                  : [...prev, group]
+                              );
+                            }}
+                            className={groups.includes(group) ? "bg-gray-100" : ""}
+                          >
+                            <span className="flex items-center gap-2">
+                              {groups.includes(group) && (
+                                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 20 20"><path d="M5 10l4 4 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                              )}
+                              {group}
+                            </span>
+                          </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-                {/* Schedule Send Time */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">Schedule Send Time</label>
-                  <div className="relative">
-                    <Input
-                      type="datetime-local"
-                      value={scheduleTime}
-                      onChange={e => setScheduleTime(e.target.value)}
-                      className="pr-4"
-                    />
+                {/* Schedule Send Time - only show for SCHEDULED_MARKETING */}
+                {campaignType === "SCHEDULED_MARKETING" && (
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Schedule Send Time</label>
+                    <div className="relative">
+                      <Input
+                        type="datetime-local"
+                        value={scheduleTime}
+                        onChange={e => setScheduleTime(e.target.value)}
+                        className="bg-white pr-4"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-                </div>
-              </div>
+              {/* Info message for Marketing type only (moved above) */}
               {/* Footer Buttons (outside card) */}
-          <div className="flex justify-end gap-4 mt-8">
-            <Button variant="outline">Cancel</Button>
-            <Button className="bg-black text-white hover:bg-gray-800">Create Campaign</Button>
-          </div>
+              <div className="flex justify-end gap-4 mt-8">
+                <Button variant="outline">Cancel</Button>
+                <Button className="bg-black text-white hover:bg-gray-800">Create Campaign</Button>
+              </div>
             </div>
             {/* Right: Template Preview */}
             <div className="w-[380px] flex-shrink-0">

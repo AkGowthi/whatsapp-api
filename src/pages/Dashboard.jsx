@@ -1,10 +1,8 @@
 import { useState } from "react"
 import { MessageCircle, Calendar, Users, Wallet, ChevronDown } from "lucide-react"
-import { FaWhatsapp } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
 import {
   ChartContainer,
   ChartTooltip,
@@ -17,15 +15,6 @@ import {
   SidebarProvider,
   SidebarInset,
 } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
 
 export default function Dashboard() {
   const [count, setCount] = useState(0)
@@ -46,21 +35,9 @@ export default function Dashboard() {
       <AppSidebar />
 
       <SidebarInset className="min-h-screen bg-gray-50">
-        <header className="flex h-16 items-center gap-2 px-4 relative">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Home</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
 
         <main className="p-6">
+          <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
 
             {/* WhatsApp Details Card */}

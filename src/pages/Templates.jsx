@@ -8,15 +8,6 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -139,21 +130,6 @@ export default function Templates() {
       <AppSidebar />
 
       <SidebarInset className="min-h-screen bg-gray-50">
-        <header className="flex h-16 items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mx-2 h-6" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Templates</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
 
         <main className="p-6">
           <div className="mb-6">

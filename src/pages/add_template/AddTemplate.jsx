@@ -319,12 +319,118 @@ export default function AddTemplate() {
     }, 0);
   };
 
+  // WhatsApp-style markdown renderer for preview
+  function renderWhatsappMarkdown(text) {
+    if (!text) return null;
+    // Escape HTML
+    let safe = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    // Monospace: `text` (white text for preview)
+    safe = safe.replace(/`([^`]+)`/g, '<span style="background:#1b4636;border-radius:8px;padding:2px 12px;display:inline-block;font-family:monospace;color:#fff;font-size:1.25em;">$1</span>');
+    // Bold: *text*
+    safe = safe.replace(/\*([^*]+)\*/g, '<strong style="font-weight:700;">$1</strong>');
+    // Italic: _text_
+    safe = safe.replace(/_([^_]+)_/g, '<em style="font-style:italic;">$1</em>');
+    // Strikethrough: ~text~
+    safe = safe.replace(/~([^~]+)~/g, '<span style="text-decoration:line-through;">$1</span>');
+
+    // Convert lines to array for easier processing
+    const lines = safe.split('\n');
+    let html = '';
+    let inList = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const listMatch = /^(?:-|\*|•) (.+)$/.exec(line);
+      if (listMatch) {
+        if (!inList) {
+          html += '<ul style="margin:0;">';
+          inList = true;
+        }
+  // Remove default marker, use only custom bullet, align bullet and text center
+  html += `<li style="list-style-type:none;padding-left:0;display:flex;align-items:center;"><span style='display:inline-block;margin-right:0.25em;font-size:1.5em;line-height:1;'>•</span><span style='display:inline;'>${listMatch[1]}</span></li>`;
+        // If next line is not a list, close ul
+        if (i + 1 === lines.length || !/^(?:-|\*|•) (.+)$/.test(lines[i + 1])) {
+          html += '</ul>';
+          inList = false;
+        }
+      } else {
+        if (inList) {
+          html += '</ul>';
+          inList = false;
+        }
+        if (line.trim() !== '') {
+          html += line + '<br>';
+        } else {
+          html += '<br>';
+        }
+      }
+    }
+    // Remove trailing <br>
+    html = html.replace(/(<br>\s*)+$/g, '');
+
+    return <span dangerouslySetInnerHTML={{ __html: html }} />;
+  }
+
+  // Helper to apply markdown formatting
+  const applyFormatting = (type) => {
+    const textarea = bodyTextareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    let selected = body.slice(start, end);
+    let before = body.slice(0, start);
+    let after = body.slice(end);
+    let newValue = body;
+    let cursorOffset = 0;
+    switch (type) {
+      case 'bold':
+        newValue = before + `*${selected || 'bold text'}*` + after;
+        cursorOffset = selected ? 0 : 2;
+        break;
+      case 'italic':
+        newValue = before + `_${selected || 'italic text'}_` + after;
+        cursorOffset = selected ? 0 : 1;
+        break;
+      case 'strikethrough':
+        newValue = before + `~${selected || 'strikethrough'}~` + after;
+        cursorOffset = selected ? 0 : 1;
+        break;
+      case 'monospace':
+        newValue = before + `\`${selected || 'monospace'}\`` + after;
+        cursorOffset = selected ? 0 : 1;
+        break;
+      case 'list':
+        if (selected) {
+          const lines = selected.split('\n').map(line => line.startsWith('- ') ? line : `- ${line}`);
+          newValue = before + lines.join('\n') + after;
+        } else {
+          newValue = before + '- Item' + after;
+          cursorOffset = 6;
+        }
+        break;
+      default:
+        return;
+    }
+    setBody(newValue);
+    setTimeout(() => {
+      textarea.focus();
+      if (type === 'list' && !selected) {
+        textarea.setSelectionRange(start + 2, start + 6);
+      } else if (!selected) {
+        textarea.setSelectionRange(start + cursorOffset, start + cursorOffset + (type === 'bold' ? 8 : type === 'italic' ? 10 : type === 'strikethrough' ? 13 : type === 'monospace' ? 8 : 0));
+      } else {
+        textarea.setSelectionRange(start, start + newValue.length - before.length - after.length);
+      }
+    }, 0);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="min-h-screen bg-gray-50">
-        <div className="p-8">
-          <h1 className="text-2xl font-semibold mb-8">Create New Template</h1>
+        <div className="p-6">
+          <h1 className="text-2xl font-semibold mb-6">Create New Template</h1>
           <div className="flex gap-6 items-start">
             {/* Left: Form */}
             <div className="flex-1 max-w-full">
@@ -569,19 +675,19 @@ export default function AddTemplate() {
                         Body <Info className="w-4 h-4 text-gray-400" />
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" type="button" onClick={() => applyFormatting('bold')}>
                           <Bold className="w-4 h-4" />
                         </Button>
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" type="button" onClick={() => applyFormatting('italic')}>
                           <Italic className="w-4 h-4" />
                         </Button>
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" type="button" onClick={() => applyFormatting('strikethrough')}>
                           <Strikethrough className="w-4 h-4" />
                         </Button>
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" type="button" onClick={() => applyFormatting('monospace')}>
                           <Code2 className="w-4 h-4" />
                         </Button>
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" type="button" onClick={() => applyFormatting('list')}>
                           <List className="w-4 h-4" />
                         </Button>
                         <Button
@@ -1040,7 +1146,7 @@ export default function AddTemplate() {
                                 : " pt-3"
                             }`}
                           >
-                            {body}
+                            {renderWhatsappMarkdown(body)}
                           </span>
                         )}
                         {footer && (

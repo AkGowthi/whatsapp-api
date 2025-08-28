@@ -228,3 +228,7 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.wa-preview li::marker {
+  margin-right: 0 !important;
+}

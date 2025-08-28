@@ -73,9 +73,11 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem asChild>
+                <a href="/account" className="flex items-center gap-2">
+                  <BadgeCheck />
+                  Account
+                </a>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

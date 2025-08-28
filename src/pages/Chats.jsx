@@ -104,6 +104,42 @@ export default function Chats() {
       time: "05/12/2025",
       unreadCount: 9,
     },
+    // --- Added 5 more sample chats below ---
+    {
+      id: "918765432100",
+      name: "918765432100",
+      lastMessage: "Can you share the invoice?",
+      time: "05/10/2025",
+      unreadCount: 2,
+    },
+    {
+      id: "917654321234",
+      name: "917654321234",
+      lastMessage: "Thank you!",
+      time: "05/09/2025",
+      unreadCount: 1,
+    },
+    {
+      id: "919876543210",
+      name: "919876543210",
+      lastMessage: "Please call me back.",
+      time: "05/08/2025",
+      unreadCount: 4,
+    },
+    {
+      id: "918123456789",
+      name: "918123456789",
+      lastMessage: "Order has been shipped.",
+      time: "05/07/2025",
+      unreadCount: 3,
+    },
+    {
+      id: "917123456789",
+      name: "917123456789",
+      lastMessage: "Received the payment.",
+      time: "05/06/2025",
+      unreadCount: 5,
+    },
   ];
 
   // Sample messages for selected chat
@@ -136,28 +172,12 @@ export default function Chats() {
     <SidebarProvider>
       <AppSidebar />
 
-      <SidebarInset className="min-h-screen bg-gray-50">
-        <header className="flex h-16 items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mx-2 h-6" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Chats</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
-
-        <div className="flex h-[calc(100vh-4rem)]">
+      <SidebarInset className="h-screen bg-gray-50 flex flex-col">
+        <div className="flex flex-1 h-full">
           {/* Chat List Panel */}
-          <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+          <div className="w-80 bg-white border-r border-gray-200 flex flex-col h-screen">
             {/* Chat List Header */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <FaWhatsapp className="w-6 h-6 text-green-500" />
@@ -171,7 +191,6 @@ export default function Chats() {
                   >
                     <MessageSquarePlus className="w-5 h-5" />
                   </Button>
-
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -209,8 +228,8 @@ export default function Chats() {
               </div>
             </div>
 
-            {/* Chat List */}
-            <ScrollArea className="flex-1">
+            {/* Chat List - with fixed height and scrolling */}
+            <div className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
               <div className="p-2 space-y-2">
                 {chats.map((chat, index) => {
                   const showDropdown =
@@ -265,7 +284,7 @@ export default function Chats() {
                   );
                 })}
               </div>
-            </ScrollArea>
+            </div>
           </div>
 
           {/* Chat Conversation Panel */}

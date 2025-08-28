@@ -7,6 +7,7 @@ import {
   Library,
   CalendarCheck2,
   Users,
+  Wallet,
   UserSquare,
   ListChecks,
   Upload,
@@ -137,13 +138,23 @@ const data = {
         },
       ],
     },
+    {
+      title: "Wallet",
+      url: "/wallet",
+      icon: Wallet,
+    },
   ],
 };
 
 export function AppSidebar({ ...props }) {
   return (
     <>
-      <Sidebar collapsible="icon" {...props} className="relative">
+      <Sidebar
+        collapsible="icon"
+        {...props}
+        className="fixed top-0 left-0 h-screen z-40 bg-white border-r border-gray-200 group/sidebar-wrapper"
+        style={{ width: 'var(--sidebar-width, 16rem)' }}
+      >
         <SidebarHeader>
           <div className="flex items-center gap-3 p-2">
             <span className="flex aspect-square size-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-sidebar-primary-foreground">
